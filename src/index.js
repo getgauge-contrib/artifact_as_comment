@@ -21,7 +21,7 @@ var inputs = {
   try {
     let octokit = github.getOctokit(opts.secret);
     var openPRs = await octokit.pulls.list({ ...github.context.repo, state: "open" });
-    let workflows = await octokit.actions.listRepoWorkflows(github.context.repo.repo);
+    let workflows = await octokit.actions.listRepoWorkflows(github.context.repo);
     let workflowId = workflows.data.workflows.find(
       (x) => x.path === opts.workFlowFileName
     ).id;
