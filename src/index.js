@@ -15,6 +15,9 @@ var inputs = {
   try {
     let octokit = github.getOctokit(opts.secret);
     var openPRs = await octokit.pulls.list({ ...github.context.repo, state: "open" });
+    if (openPRs.length === 0) {
+      core.info(`No open PRs found in ${github.context.repo}`);
+    }
     let workflows = await octokit.actions.listRepoWorkflows(github.context.repo);
     let workflowId = workflows.data.workflows.find(
       (x) => x.path === opts.workFlowFileName
@@ -54,7 +57,6 @@ See [Workflow log](${match.html_url}) for more details.`;
                 issue_number: p.number,
               })
             ).data;
-            console.log(prComments);
             var existingBenchmarkComment = prComments.find(
               (c) => c.body.split("\n")[0] === commentHeader
             );
@@ -86,6 +88,7 @@ See [Workflow log](${match.html_url}) for more details.`;
       }
     });
   } catch (error) {
+    core.error(error);
     core.setFailed(error.message);
   }
 })(inputs);
