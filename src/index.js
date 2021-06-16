@@ -15,9 +15,10 @@ var inputs = {
   try {
     let octokit = github.getOctokit(opts.secret);
     var openPRs = await octokit.pulls.list({ ...github.context.repo, state: "open" });
-    if (openPRs.length === 0) {
-      core.info(`No open PRs found in ${github.context.repo}`);
-    }
+//     if (openPRs.length === 0) {
+//       core.info(`No open PRs found in ${github.context.repo}`);
+//       return;
+//     }
     let workflows = await octokit.actions.listRepoWorkflows(github.context.repo);
     let workflowId = workflows.data.workflows.find(
       (x) => x.path === opts.workFlowFileName
@@ -89,6 +90,7 @@ See [Workflow log](${match.html_url}) for more details.`;
     });
   } catch (error) {
     core.error(error);
+    core.error(error.message);
     core.setFailed(error.message);
   }
 })(inputs);
