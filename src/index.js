@@ -16,7 +16,7 @@ var inputs = {
     let octokit = github.getOctokit(opts.secret);
     var openPRs = await octokit.pulls.list({ ...github.context.repo, state: "open" });
     if (openPRs.data.length === 0) {
-      core.info(`No open PRs found in ${github.context.repo.owner}/${github.context.repo.name}`);
+      core.info(`No open PRs found in ${github.context.repo.owner}/${github.context.repo.repo}`);
       return;
     }
     let workflows = await octokit.actions.listRepoWorkflows(github.context.repo);
