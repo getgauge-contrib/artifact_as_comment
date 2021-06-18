@@ -24,10 +24,17 @@ var inputs = {
       (x) => x.path === opts.workFlowFileName
     ).id;
     core.info(`WorkflowID ${workflowId} found for ${opts.workFlowFileName}`);
-    let runs = await octokit.actions.listWorkflowRuns({
-      ...github.context.repo,
-      workflow_id: workflowId,
-    });
+    let runs;
+    try {
+      runs = await octokit.actions.listWorkflowRuns({
+        ...github.context.repo,
+        workflow_id: workflowId,
+      });        
+    } catch (error) {
+      core.info(`error fetching workflow runs for ${workflowId}`);
+      core.error(error);
+      core.setFailed(error);
+    }
     openPRs.data.forEach(async (p) => {
       core.info(`Checking for Pull Request - ${p.id}`);
       try {
