@@ -23,16 +23,19 @@ var inputs = {
     let workflowId = workflows.data.workflows.find(
       (x) => x.path === opts.workFlowFileName
     ).id;
+    core.info(`WorkflowID ${workflowId} found for ${opts.workFlowFileName}`);
     let runs = await octokit.actions.listWorkflowRuns({
       ...github.context.repo,
       workflow_id: workflowId,
     });
     openPRs.data.forEach(async (p) => {
+      core.info(`Checking for Pull Request - ${p.id}`);
       try {
         var match = runs.data.workflow_runs.find(
           (w) => w.head_sha === p.head.sha
         );
         if (match) {
+          core.info(`Workflow run ${match.id} found for PR (SHA ${p.head.sha})`);
           let artifacts = await octokit.actions.listWorkflowRunArtifacts({
             ...github.context.repo,
             run_id: match.id,
@@ -41,6 +44,7 @@ var inputs = {
             (a) => a.name === opts.artifactName
           );
           if (benchmarkArtifact) {
+            core.info(`Benchmark artifact found. Downloading...`)
             const zip = await octokit.actions.downloadArtifact({
               ...github.context.repo,
               artifact_id: benchmarkArtifact.id,
