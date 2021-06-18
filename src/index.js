@@ -19,16 +19,11 @@ var inputs = {
       core.info(`No open PRs found in ${github.context.repo.owner}/${github.context.repo.repo}`);
       return;
     }
-    let workflows = await octokit.actions.listRepoWorkflows(github.context.repo);
-    let workflowId = workflows.data.workflows.find(
-      (x) => x.path === opts.workFlowFileName
-    ).id;
-    core.info(`WorkflowID ${workflowId} found for ${opts.workFlowFileName}`);
     let runs;
     try {
       runs = await octokit.actions.listWorkflowRuns({
         ...github.context.repo,
-        workflow_id: workflowId,
+        workflow_file_name: opts.workFlowFileName,
       });        
     } catch (error) {
       core.info(`error fetching workflow runs for ${workflowId}`);
