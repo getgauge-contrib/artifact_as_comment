@@ -26,12 +26,8 @@ var inputs = {
         workflow_file_name: opts.workFlowFileName,
       });        
     } catch (error) {
-      if (error instanceof HttpError) {
-        core.info(`error fetching workflow runs for ${opts.workFlowFileName}`);
-        return;
-      }
-      core.error(error);
-      core.setFailed(error);
+      core.info(`error fetching workflow runs for ${opts.workFlowFileName} - ${error.message}`);
+      return;
     }
     openPRs.data.forEach(async (p) => {
       core.info(`Checking for Pull Request - ${p.id}`);
