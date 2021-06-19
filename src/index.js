@@ -26,7 +26,10 @@ var inputs = {
         workflow_file_name: opts.workFlowFileName,
       });        
     } catch (error) {
-      core.info(`error fetching workflow runs for ${workflowId}`);
+      if (error instanceof HttpError) {
+        core.info(`error fetching workflow runs for ${opts.workFlowFileName}`);
+        return;
+      }
       core.error(error);
       core.setFailed(error);
     }
