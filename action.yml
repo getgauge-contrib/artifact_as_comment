@@ -15,5 +15,5 @@ inputs:
     description: "Filename to extract from the artifact downloaded"
     default: "benchmark_results.md"
 runs:
-  using: "node12"
+  using: "node18"
   main: "src/index.js"
